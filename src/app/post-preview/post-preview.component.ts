@@ -31,9 +31,14 @@ export class PostPreviewComponent {
   | además, un manejador para el mismo.                                      |
   |=========================================================================*/
   @Output() chosenPost = new EventEmitter<Post>();
+  @Output() authorIdEmit= new EventEmitter<Post>();
 
   notificarSeleccionPost(post:Post):void{
     this.chosenPost.emit(post);
+  }
+
+  sayAuthor(author:Post):void{
+    this.authorIdEmit.emit(author);
   }
 
   plainTextToHtml(text: string): string {

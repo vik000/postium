@@ -12,6 +12,13 @@ export class PostsListComponent {
 
   @Input() posts: Post[];
 
+  chosenPost:Post;
+  authorIdEmit:Post;
+
+  constructor(
+    private _router: Router
+  ) { }
+
   /*=========================================================================|
   | Red Path                                                                 |
   |==========================================================================|
@@ -21,7 +28,11 @@ export class PostsListComponent {
   | Router de la app. La ruta a navegar es '/posts/users', pasando como      |
   | parámetro el identificador del autor.                                    |
   |=========================================================================*/
-
+  filterByAuthor(author:Post):void{
+    let authorId=author.author.id;
+    //console.log(authorId);
+    this._router.navigate(['/posts/users/'+authorId]);
+  }
   /*=========================================================================|
   | Green Path                                                               |
   |==========================================================================|
@@ -31,11 +42,6 @@ export class PostsListComponent {
   | app. La ruta a navegar es '/posts', pasando como parámetro el            |
   | identificador del post.                                                  |
   |=========================================================================*/
-  chosenPost:Post;
-  constructor(
-    private _router: Router
-  ) { }
-
   verDetalles(detalles:Post):void{
     this._router.navigate(['/posts/'+detalles.id]);
     //console.log(detalles.id);

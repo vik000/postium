@@ -40,7 +40,9 @@ export class PostService {
   }
 
   getUserPosts(id: number): Observable<Post[]> {
-
+    const options2={
+      params: new HttpParams().set('_filter','author.id=autor')
+    }
     /*=========================================================================|
     | Red Path                                                                 |
     |==========================================================================|
@@ -61,7 +63,7 @@ export class PostService {
     | Una pista más, por si acaso: HttpParams.                                 |
     |=========================================================================*/
 
-     return this._http.get<Post[]>(`${environment.backendUri}/posts`);
+     return this._http.get<Post[]>(`${environment.backendUri}/posts`,options2);
   }
 
   getCategoryPosts(id: number): Observable<Post[]> {
