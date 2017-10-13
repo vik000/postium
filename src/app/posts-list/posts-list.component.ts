@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 import { Post } from '../post';
 
 @Component({
@@ -30,5 +31,13 @@ export class PostsListComponent {
   | app. La ruta a navegar es '/posts', pasando como parámetro el            |
   | identificador del post.                                                  |
   |=========================================================================*/
+  chosenPost:Post;
+  constructor(
+    private _router: Router
+  ) { }
 
+  verDetalles(detalles:Post):void{
+    this._router.navigate(['/posts/'+detalles.id]);
+    //console.log(detalles.id);
+  }
 }

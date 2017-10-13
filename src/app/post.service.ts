@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient,HttpHeaders, HttpParams } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
@@ -13,6 +13,10 @@ export class PostService {
   constructor(private _http: HttpClient) { }
 
   getPosts(): Observable<Post[]> {
+    const options={
+      params: new HttpParams().set('_sort','publicationDate').set('_order','DESC' ).set('_filter','publicationDate_lte=fecha')//no tengo claro si le tengo que decir de dónde sale fecha, pero ya me da vergüenza preguntar.
+      //No sé por qué me deja usar los parámetros de la clase Post aquí dentro sin poner Post.publicationDate (por ejemplo) si no la he llamado aquí dentro.
+    };
 
     /*=========================================================================|
     | Pink Path                                                                |
@@ -32,7 +36,7 @@ export class PostService {
     | Una pista más, por si acaso: HttpParams.                                 |
     |=========================================================================*/
 
-    return this._http.get<Post[]>(`${environment.backendUri}/posts`);
+    return this._http.get<Post[]>(`${environment.backendUri}/posts`,options);
   }
 
   getUserPosts(id: number): Observable<Post[]> {

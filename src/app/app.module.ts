@@ -4,11 +4,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FromNowPipe } from './from-now.pipe'; //DONE!
 
 /*----------------------------------------------------------|
  | ~~~ Blue Path ~~~                                        |
  |----------------------------------------------------------|
- | Importa FromNowPipe para poder usarlo en este documento. |
+ | Importa FromNowPipe para poder usarlo en este documento. /
+ |                      DONE!                               /
  |----------------------------------------------------------*/
 
 import { AppComponent } from './app.component';
@@ -61,7 +63,8 @@ import { UserService } from './user.service';
     PostsByCategoryComponent,
     PostsListComponent,
     PostsViewComponent,
-    SearchBoxComponent
+    SearchBoxComponent,
+    FromNowPipe //DONE!
   ],
   providers: [
     CategoryResolveService,
