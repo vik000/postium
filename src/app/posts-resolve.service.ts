@@ -11,8 +11,16 @@ export class PostsResolveService implements Resolve<Post[]> {
 
   constructor(private _postService: PostService) { }
 
-  resolve(route: ActivatedRouteSnapshot): Observable<Post[]> {
+    resolve(route: ActivatedRouteSnapshot): Observable<Post[]> {
+      return route.params['userId']
+        ? this._postService.getUserPosts(+route.params['userId'])
+        : route.params['categoryId']
+          ? this._postService.getCategoryPosts(+route.params['categoryId'])
+          : this._postService.getPosts();
+    }
 
+
+}
     /*=========================================================================|
     | Red Path                                                                 |
     |==========================================================================|
@@ -30,8 +38,3 @@ export class PostsResolveService implements Resolve<Post[]> {
     | del servicio PostService. Recuerda mirar en los parámetros de la ruta, a |
     | ver qué encuentras.                                                      |
     |=========================================================================*/
-
-    return this._postService.getPosts();
-  }
-
-}

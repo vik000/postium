@@ -7,14 +7,23 @@ import 'rxjs/add/operator/map';
 import { environment } from '../environments/environment';
 import { Post } from './post';
 
+//import * as moment from 'moment';
+
 @Injectable()
 export class PostService {
 
   constructor(private _http: HttpClient) { }
 
+  //puedo importar el post?
+  //sirve de algo?
+
   getPosts(): Observable<Post[]> {
+    let today=Date.now();
+    //let ten_days_ago=Date.now() + -10*24*3600*1000;
+    //console.log(today,ten_days_ago)
     const options={
-      params: new HttpParams().set('_sort','publicationDate').set('_order','DESC' ).set('_filter','publicationDate_lte=fecha')//no tengo claro si le tengo que decir de dónde sale fecha, pero ya me da vergüenza preguntar.
+      params: new HttpParams().set('_sort','publicationDate').set('_order','DESC').set('publicationDate_lte',today.toString())
+      //no tengo claro si le tengo que decir de dónde sale fecha, pero ya me da vergüenza preguntar.
       //No sé por qué me deja usar los parámetros de la clase Post aquí dentro sin poner Post.publicationDate (por ejemplo) si no la he llamado aquí dentro.
     };
 
@@ -40,9 +49,13 @@ export class PostService {
   }
 
   getUserPosts(id: number): Observable<Post[]> {
-    const options2={
-      params: new HttpParams().set('_filter','author.id=autor')
-    }
+    console.log(id);
+    let today=Date.now();
+
+    const options = {
+      params: new HttpParams().set('_sort','publicationDate').set('_order','DESC').set('publicationDate_lte',today.toString()).set('author.id',id.toString())
+    };
+    return this._http.get<Post[]>(`${environment.backendUri}/posts`,options);
     /*=========================================================================|
     | Red Path                                                                 |
     |==========================================================================|
@@ -62,11 +75,14 @@ export class PostService {
     |                                                                          |
     | Una pista más, por si acaso: HttpParams.                                 |
     |=========================================================================*/
-
-     return this._http.get<Post[]>(`${environment.backendUri}/posts`,options2);
   }
 
   getCategoryPosts(id: number): Observable<Post[]> {
+    let today=Date.now();
+    const options={
+      params:new HttpParams().set('_sort','publicationDate').set('_order','DESC').set('publicationDate_lte',today.toString()).set('categories.id',id.toString())
+    }
+    return this._http.get<Post[]>(`${environment.backendUri}/posts`,options);
 
     /*=========================================================================|
     | Yellow Path                                                              |
@@ -95,8 +111,6 @@ export class PostService {
     |                                                                          |
     | Una pista más, por si acaso: HttpParams.                                 |
     |=========================================================================*/
-
-     return this._http.get<Post[]>(`${environment.backendUri}/posts`);
   }
 
   getPostDetails(id: number): Observable<Post> {
