@@ -17,8 +17,8 @@ import 'moment/locale/es';
   name:'fromNow'
 })
 
-export class FromNowPipe {
-  transform(fecha:number):any{ //no me entero del tipo que retorna esto
+export class FromNowPipe implements PipeTransform {
+  transform(fecha:number):any{ 
     let postTime=moment(fecha).fromNow();
     return postTime;
   }

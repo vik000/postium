@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 
 import { CategoryResolveService } from './category-resolve.service';
 import { NewStoryComponent } from './new-story/new-story.component';

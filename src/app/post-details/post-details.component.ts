@@ -40,11 +40,13 @@ export class PostDetailsComponent implements OnInit {
   | inyectar como dependencia el Router de la app. La ruta a navegar es      |
   | '/posts/users', pasando como parámetro el identificador del autor.       |
   |=========================================================================*/
-  @Output() authorIdEmit = new EventEmitter<Post>();
 
-  sayAuthor(post){
-    this.authorIdEmit.emit(post);
+  toPostByAuthor(author):void{
+    //console.log(author.id);
+    this._router.navigate(['posts/users',author.id]);
   }
+
+
   /*=========================================================================|
   | Yellow Path                                                              |
   |==========================================================================|
