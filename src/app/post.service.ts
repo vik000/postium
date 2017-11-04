@@ -6,6 +6,7 @@ import 'rxjs/add/operator/map';
 
 import { environment } from '../environments/environment';
 import { Post } from './post';
+import { Category } from './category';
 
 //import * as moment from 'moment';
 
@@ -14,18 +15,16 @@ export class PostService {
 
   constructor(private _http: HttpClient) { }
 
-  //puedo importar el post?
-  //sirve de algo?
-
   getPosts(): Observable<Post[]> {
     let today=Date.now();
     //let ten_days_ago=Date.now() + -10*24*3600*1000;
     //console.log(today,ten_days_ago)
     const options={
-      params: new HttpParams().set('_sort','publicationDate').set('_order','DESC').set('publicationDate_lte',today.toString())
-      //no tengo claro si le tengo que decir de dónde sale fecha, pero ya me da vergüenza preguntar.
-      //No sé por qué me deja usar los parámetros de la clase Post aquí dentro sin poner Post.publicationDate (por ejemplo) si no la he llamado aquí dentro.
-    };
+      params: new HttpParams()
+      .set('_sort','publicationDate')
+      .set('_order','DESC')
+      .set('publicationDate_lte',today.toString())
+  };
 
     /*=========================================================================|
     | Pink Path                                                                |
@@ -53,7 +52,11 @@ export class PostService {
     let today=Date.now();
 
     const options = {
-      params: new HttpParams().set('_sort','publicationDate').set('_order','DESC').set('publicationDate_lte',today.toString()).set('author.id',id.toString())
+      params: new HttpParams()
+      .set('_sort','publicationDate')
+      .set('_order','DESC')
+      .set('publicationDate_lte',today.toString())
+      .set('author.id',id.toString())
     };
     return this._http.get<Post[]>(`${environment.backendUri}/posts`,options);
     /*=========================================================================|
@@ -80,10 +83,21 @@ export class PostService {
   getCategoryPosts(id: number): Observable<Post[]> {
     let today=Date.now();
     const options={
-      params:new HttpParams().set('_sort','publicationDate').set('_order','DESC').set('publicationDate_lte',today.toString()).set('categories.id',id.toString())
+      params:new HttpParams()
+      .set('_sort','publicationDate')
+      .set('_order','DESC')
+      .set('publicationDate_lte',today.toString())
     }
-    return this._http.get<Post[]>(`${environment.backendUri}/posts`,options);
-
+    return this._http.get<Post[]>(`${environment.backendUri}/posts`,options).map((posts)=>{
+      return posts.filter( (post: Post): boolean => {
+        for (var cat in post.categories){
+          if (cat['id']==id){
+            return cat['id'];
+          }
+        }
+      } );
+    });
+}
     /*=========================================================================|
     | Yellow Path                                                              |
     |==========================================================================|
@@ -94,7 +108,8 @@ export class PostService {
     | fecha de publicación descendente y obtener solo aquellos que estén       |
     | publicados.                                                              |
     |                                                                          |
-    | Este Path tiene un extra de dificultad: un objeto Post tiene una         |
+    | **
+      Este Path tiene un extra de dificultad: un objeto Post tiene una         |
     | colección de objetos Categoria, y 'JSON Server' no permite filtrado en   |
     | colecciones anidadas. Por tanto, te toca a ti darle una solución a este  |
     | marrón. Una posibilidad sería aprovechar el operador 'map' de los        |
@@ -111,7 +126,7 @@ export class PostService {
     |                                                                          |
     | Una pista más, por si acaso: HttpParams.                                 |
     |=========================================================================*/
-  }
+
 
   getPostDetails(id: number): Observable<Post> {
     return this._http.get<Post>(`${environment.backendUri}/posts/${id}`);
