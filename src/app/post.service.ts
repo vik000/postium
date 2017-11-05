@@ -82,21 +82,31 @@ export class PostService {
 
   getCategoryPosts(id: number): Observable<Post[]> {
     let today=Date.now();
+    let res;
+    let fil=[];
     const options={
       params:new HttpParams()
       .set('_sort','publicationDate')
       .set('_order','DESC')
       .set('publicationDate_lte',today.toString())
     }
-    return this._http.get<Post[]>(`${environment.backendUri}/posts`,options).map((posts)=>{
-      return posts.filter( (post: Post): boolean => {
-        for (var cat in post.categories){
-          if (cat['id']==id){
-            return cat['id'];
+    res=this._http.get<Post[]>(`${environment.backendUri}/posts`,options)
+    .map(post=>{
+      for (let i in post){
+        for (let j in post[i].categories){
+          //console.log(post[i].categories[j])
+          if(post[i].categories[j].id==id){
+            console.log(post[i])
+            fil.push(post[i])
+            console.log(fil);
           }
         }
-      } );
+      }
+      return fil;
     });
+    console.log(typeof res);
+    console.log(fil);
+    return res;
 }
     /*=========================================================================|
     | Yellow Path                                                              |
